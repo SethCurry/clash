@@ -4,5 +4,9 @@
   :license {:name "MIT"
             :url "https://opensource.org/licenses/MIT"}
   :dependencies [[org.clojure/clojure "1.12.5"]
-                 [reply/reply "0.5.1"]]
-  :repl-options {:init-ns clash.core})
+                 [reply/reply "0.5.1"]
+                 [com.taoensso/telemere "1.2.1"]]
+  :main ^:skip-aot clash.core
+  :target-path "target/%s"
+  :repl-options {:init-ns clash.core}
+  :profiles {:uberjar {:aot :all}})

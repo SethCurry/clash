@@ -2,7 +2,9 @@
   (:require [clojure.pprint :refer [print-table]]
             [clojure.string :as string]
             [clojure.repl :refer [doc]]
-            [reply.main :as reply]))
+            [reply.main :as reply]
+            [taoensso.telemere :as t])
+  (:gen-class))
 
 (defprotocol ShellData
   (to-printable [this])
@@ -53,3 +55,7 @@
                             :value-to-string value-to-string
                             :print-value print-value
                             :skip-default-init true}))
+
+(defn -main [& all-args]
+  (t/set-min-level! :debug)
+  (start-shell))

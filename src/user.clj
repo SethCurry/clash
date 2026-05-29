@@ -1,4 +1,4 @@
 (ns user
-  (:require [clash.core :as clash]))
+  (:require [clash.builtin.browser :refer [open-link browser]]))
 
 (println "Loaded user")
