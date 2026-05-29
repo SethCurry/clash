@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+CURRENT_DIR=$(pwd)
+SCRIPT_FILE="$0"
+UNLINKED_SCRIPT_FILE=$(readlink -f "$SCRIPT_FILE")
+UNLINKED_SCRIPT_DIR=$(dirname "$UNLINKED_SCRIPT_FILE")
+
+pushd "$UNLINKED_SCRIPT_DIR" &> /dev/null
+
+STARTING_DIR="$CURRENT_DIR" clojure -M -m ashell.core "$@"
+
+popd &> /dev/null

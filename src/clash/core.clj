@@ -18,19 +18,21 @@
   (table-to-console [this]
     (print-table (doall (map #(if (satisfies? ShellData %) (to-row %) %) rows)))))
 
+(defrecord ShellState [cwd])
+
 (defmacro help [symbol]
   (doc symbol))
 
 (defn cmd
   "Executes the given command in the current working directory.
-   
+
    Requires arguments to be passed as strings."
   [& args]
   (apply sh (flatten [args :dir @cwd])))
 
 (defmacro $
   "Executes the provided command as bash would.
-   
+
    Does not require arguments to be passed as strings."
   [& args]
   `(apply sh (flatten [~@(map str args) :dir @cwd])))
@@ -69,7 +71,7 @@
 
 (defn ls
   "Lists the contents of the given path.
-   
+
    Returns a list of file names as strings."
   [& [path]]
   (if path
@@ -83,10 +85,11 @@
     (doseq [l link]
       (open-link l))
     (browser (:url link))))
-
-(defn shell-init []
-  nil)
-
+; redirect I/O to file
+; - stderr and stdout to one
+; - only stdout
+; - only stderr
+; - both but to separate files
 (defn value-to-string [value]
   (cond
     (string? value) (string/join "\n" (string/split-lines value))
@@ -108,9 +111,9 @@
     (map? value) (print-table value)
     :else (println value)))
 
-(defn start-shell [args opts]
+(defn start-shell []
   (reply/launch-standalone {:standalone true
-                            :custom-eval (shell-init)
+                            :custom-eval "" ;(slurp "src/user.clj")
                             :value-to-string value-to-string
                             :print-value print-value
                             :skip-default-init true}))
