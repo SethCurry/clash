@@ -1,18 +1,13 @@
-(ns clash.fs
+(ns clash.builtin.fs
   (:require [clojure.java.io :as io]
+            [clash.state :refer [cwd]]
+            [clash.builtin.bash :refer [cmd]]
             [clojure.string :as string]))
-
-
-(def cwd (atom (.getCanonicalPath
-                (io/file (let [env-path (System/getenv "STARTING_DIR")]
-                           (if (nil? env-path)
-                             "."
-                             env-path))))))
 
 (defn absolute-path
   "Converts a path to an absolute path.
    It is assumed that the path is relative to the cwd variable.
-   
+
    Args:
    - path (string): The path to convert.
 
@@ -32,10 +27,9 @@
   [dir]
   `(reset! cwd (.getCanonicalPath (io/file (io/file @cwd) ~(str dir)))))
 
-
 (defn find-files
   "Finds all files in a directory and its subdirectories.
-   
+
    Args:
    - dir (string): The directory to find files in.
 
@@ -51,7 +45,7 @@
 
 (defn file-has-extension?
   "Checks if a file has a given extension.
-   
+
    Args:
    - file (java.io.File): The file to check.
    - extension (string): The extension to check for.
@@ -62,3 +56,20 @@
   [file extension]
   (let [file-name (.getName file)]
     (string/ends-with? file-name (str "." extension))))
+
+(defn- ls-impl [path]
+  (string/split-lines (:out  (cmd "ls" path))))
+
+(defn ls
+  "Lists the contents of the given path.
+
+   Returns a list of file names as strings."
+  [& [path]]
+  (if path
+    (ls-impl (absolute-path path))
+    (ls-impl ".")))
+
+(defn read-file
+  "Reads the contents of the given file and returns them as a string."
+  [file]
+  (slurp (absolute-path file)))
