@@ -20,7 +20,10 @@
     (catch Exception e
       (if (string/ends-with? (.getMessage e) "is not a relative path")
         path
-        (throw (Exception. (str "Error getting absolute path for " path ": " (.getMessage e))))))))
+        (throw (Exception. (str "Error getting absolute path for "
+                                path
+                                ": "
+                                (.getMessage e))))))))
 
 (defmacro cd
   "Changes the current working directory to the given directory."

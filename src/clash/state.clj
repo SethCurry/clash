@@ -6,3 +6,8 @@
                            (if (nil? env-path)
                              "."
                              env-path))))))
+
+(def env (atom {}))
+
+(defn set-env [env-key env-value]
+  (swap! env #(assoc % env-key env-value)))
