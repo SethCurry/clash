@@ -1,4 +1,5 @@
 (ns user
-  (:require [clash.builtin.browser :refer [browser]]))
-
-(println "Loaded user")
+  (:require [clash.builtin.browser :refer [browser]]
+            [clash.builtin.bash :refer [cmd $]]
+            [clash.state :refer [cwd]]
+            [clash.builtin.fs :refer [cd]]))

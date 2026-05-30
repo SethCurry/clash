@@ -12,6 +12,8 @@
 (defmacro $
   "Executes the provided command as bash would.
 
-   Does not require arguments to be passed as strings."
+   Does not require arguments to be passed as strings.
+
+   TODO: Currently gets very upset if there are slashes in the file name."
   [& args]
   `(apply sh (flatten [~@(map str args) :dir @cwd])))

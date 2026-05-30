@@ -25,7 +25,10 @@
 (defmacro cd
   "Changes the current working directory to the given directory."
   [dir]
-  `(reset! cwd (.getCanonicalPath (io/file (io/file @cwd) ~(str dir)))))
+  (let [new-path (absolute-path (str dir))]
+    (when (not (.exists (io/file new-path)))
+      (throw (ex-info "Directory does not exist" {:path new-path})))
+    `(reset! cwd ~new-path)))
 
 (defn find-files
   "Finds all files in a directory and its subdirectories.
